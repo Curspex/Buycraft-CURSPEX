@@ -3,7 +3,6 @@ package net.buycraft.commands;
 import net.buycraft.Plugin;
 import net.buycraft.tasks.AuthenticateTask;
 import net.buycraft.tasks.RecentPaymentsTask;
-import net.buycraft.tasks.ReloadPackagesTask;
 import net.buycraft.tasks.ReportTask;
 import net.buycraft.util.Chat;
 

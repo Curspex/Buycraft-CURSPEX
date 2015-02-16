@@ -1,9 +1,11 @@
 package net.buycraft.tasks;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -65,12 +67,12 @@ public class PendingPlayerCheckerTask extends ApiTask implements Listener {
             }
 
             // Fetch online player list
-            Player[] onlinePlayers = plugin.getServer().getOnlinePlayers();
+            //Player[] onlinePlayers = plugin.getServer().getOnlinePlayers();
 
             // If nobody has logged in for over 3 hours do not execute the package checker (Manual execution is an exception)
             if (!manualExecution && lastPlayerLogin < (System.currentTimeMillis() - 1080000)) {
                 return;
-            } else if (onlinePlayers.length > 0) {
+            } else if (Bukkit.getOnlinePlayers().size() > 0) {
                 lastPlayerLogin = System.currentTimeMillis();
             }
 
@@ -98,7 +100,7 @@ public class PendingPlayerCheckerTask extends ApiTask implements Listener {
                 // Iterate through each pending player
                 for (int i = 0; i < pendingPlayers.length(); ++i) {
                     String playerName = pendingPlayers.getString(i).toLowerCase();
-                    Player player = getPlayer(onlinePlayers, playerName);
+                    Player player = getPlayer(Bukkit.getOnlinePlayers(), playerName);
 
                     // Check if the player is offline
                     if (player == null) {
@@ -135,8 +137,8 @@ public class PendingPlayerCheckerTask extends ApiTask implements Listener {
         pendingPlayers.add(playerName.toLowerCase());
     }
 
-    private Player getPlayer(Player[] players, String name) {
-        for (Player player : players) {
+    private Player getPlayer(Collection<? extends Player> collection, String name) {
+        for (Player player : collection) {
             if (player.getName().equalsIgnoreCase(name))
                 return player;
         }

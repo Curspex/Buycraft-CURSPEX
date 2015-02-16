@@ -122,7 +122,7 @@ public class Api {
         }
 
         apiCallParams.put("secret", apiKey);
-        apiCallParams.put("playersOnline", String.valueOf(Bukkit.getOnlinePlayers().length));
+        apiCallParams.put("playersOnline", String.valueOf(Bukkit.getOnlinePlayers().size()));
   
         String url = apiUrl + generateUrlQueryString(apiCallParams);
 
