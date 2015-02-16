@@ -41,7 +41,6 @@ public class Settings {
         Boolean toSave = false;
 
         defaultProperties.put("secret", "");
-        defaultProperties.put("autoUpdate", "true");
         defaultProperties.put("commandChecker", "true");
         defaultProperties.put("https", "false");
         defaultProperties.put("disableBuyCommand", "false");
