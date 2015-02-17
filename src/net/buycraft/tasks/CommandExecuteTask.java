@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import net.buycraft.Plugin;
