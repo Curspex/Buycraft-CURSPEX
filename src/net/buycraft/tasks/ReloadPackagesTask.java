@@ -10,24 +10,30 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ReloadPackagesTask extends ApiTask {
+
     Plugin plugin;
 
-    public static void call() {
+    public static void call()
+    {
         Plugin.getInstance().addTask(new ReloadPackagesTask());
     }
 
-    private ReloadPackagesTask() {
+    private ReloadPackagesTask()
+    {
         this.plugin = Plugin.getInstance();
     }
 
-    public void run() {
+    public void run()
+    {
         plugin.getPackageManager().reset();
 
-        try {
+        try
+        {
         	JSONObject categoriesResponse = plugin.getApi().categoriesAction();
             JSONObject packagesResponse = plugin.getApi().packagesAction();
 
-            if (categoriesResponse == null || categoriesResponse.getInt("code") != 0 || packagesResponse == null || packagesResponse.getInt("code") != 0) {
+            if (categoriesResponse == null || categoriesResponse.getInt("code") != 0 || packagesResponse == null || packagesResponse.getInt("code") != 0)
+            {
             	plugin.getLogger().severe("No response/invalid key during package reload.");
             	return;
             }
@@ -35,13 +41,16 @@ public class ReloadPackagesTask extends ApiTask {
             JSONArray categories = categoriesResponse.getJSONArray("payload");
             JSONArray packages = packagesResponse.getJSONArray("payload");
 
-            for (int i = 0; i < categories.length(); ++i) {
+            for (int i = 0; i < categories.length(); ++i)
+            {
                 JSONObject row = categories.getJSONObject(i);
                 plugin.getPackageManager().addCategory(row.isNull("id") ? 0 : row.getInt("id"), row.getString("name"), row.getString("shortDescription"), row.getInt("guiItemId"));
             }
 
-            for (int i = 0; i < packages.length(); i++) {
-                if (packages.isNull(i)) {
+            for (int i = 0; i < packages.length(); i++)
+            {
+                if (packages.isNull(i))
+                {
                     continue;
                 }
 
@@ -54,10 +63,16 @@ public class ReloadPackagesTask extends ApiTask {
             plugin.getBuyUi().packagesReset();
             plugin.getLogger().info("Loaded " + packages.length() + " package(s) into the cache.");
 
-        } catch (JSONException e) {
+        }
+        
+        catch (JSONException e)
+        {
             plugin.getLogger().severe("Failed to load packages due to JSON parse error.");
             ReportTask.setLastException(e);
-        } catch (Exception e) {
+        }
+        
+        catch (Exception e)
+        {
             plugin.getLogger().log(Level.SEVERE, "Error while resetting packages", e);
             ReportTask.setLastException(e);
         }

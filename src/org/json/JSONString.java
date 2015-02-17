@@ -8,6 +8,7 @@ package org.json;
  * of using the Object's <code>toString()</code> method and quoting the result.
  */
 public interface JSONString {
+
 	/**
 	 * The <code>toJSONString</code> method allows a class to produce its own JSON 
 	 * serialization. 
@@ -15,4 +16,5 @@ public interface JSONString {
 	 * @return A strictly syntactically correct JSON text.
 	 */
 	public String toJSONString();
+
 }

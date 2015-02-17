@@ -26,37 +26,49 @@ public class HeadListener implements Listener, CommandExecutor {
 
 	public Set<String> protections = new HashSet<String>();
 
-	public HeadListener(HeadFile headFile) {
+	public HeadListener(HeadFile headFile)
+	{
 		this.headFile = headFile;
 	}
 
-	public boolean isProtected(Block block) {
-		if(headFile.getSigns().isEmpty()) {
+	public boolean isProtected(Block block)
+	{
+		if (headFile.getSigns().isEmpty())
+		{
 			return false;
 		}
-		if(protections.size() != 0) {
+
+		if (protections.size() != 0)
+		{
 			return protections.contains(HeadSign.getLocation(block.getLocation()));
 		}
+
 		// iterate through heads
-		for(HeadSign head : headFile.getSigns()) {
+		for(HeadSign head : headFile.getSigns())
+		{
 			// and faces
 			Location[] locations = head.getLocation();
-			for(BlockFace face : FACES) {
+			for(BlockFace face : FACES)
+			{
 				Location l = block.getRelative(face).getLocation();
-				for(Location loc : locations) {
+				for(Location loc : locations)
+				{
 					if(loc.getWorld().getName().equals(l.getWorld().getName()) &&
 							loc.getBlockX() == l.getBlockX() &&
 							loc.getBlockY() == l.getBlockY() &&
-							loc.getBlockZ() == l.getBlockZ()) {
+							loc.getBlockZ() == l.getBlockZ())
+					{
 						protections.add(HeadSign.getLocation(block.getLocation()));
 					}
 				}
 				l = block.getRelative(face).getRelative(BlockFace.UP).getLocation();
-				for(Location loc : locations) {
+				for(Location loc : locations)
+				{
 					if(loc.getWorld().getName().equals(l.getWorld().getName()) &&
 							loc.getBlockX() == l.getBlockX() &&
 							loc.getBlockY() == l.getBlockY() &&
-							loc.getBlockZ() == l.getBlockZ()) {
+							loc.getBlockZ() == l.getBlockZ())
+					{
 						protections.add(HeadSign.getLocation(block.getLocation()));
 					}
 				}
@@ -65,16 +77,21 @@ public class HeadListener implements Listener, CommandExecutor {
 		return protections.contains(HeadSign.getLocation(block.getLocation()));
 	}
 
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
+	{
 		// do nothing where nothing happens
-		if(!(sender.hasPermission("buycraft.admin") || sender.hasPermission("buycraft.signs"))) {
+		if(!(sender.hasPermission("buycraft.admin") || sender.hasPermission("buycraft.signs")))
+		{
 			sender.sendMessage(ChatColor.RED + "You don't have permission to do that.");
 			return true;
 		}
-		if(!(sender instanceof Player)) {
+
+		if(!(sender instanceof Player))
+		{
 			sender.sendMessage(ChatColor.RED + "You aren't a player, go away!");
 			return true;
 		}
+
 		if(!headFile.enabled)
 		{
 			sender.sendMessage(ChatColor.RED + "You need to enable this feature in the settings.conf file.");
@@ -82,24 +99,37 @@ public class HeadListener implements Listener, CommandExecutor {
 			return true;
 		}
 		Player player = (Player) sender;
-		if(args.length < 1 || args.length > 2) {
+
+		if(args.length < 1 || args.length > 2)
+		{
 			return false;
 		}
+
 		// filtering
-		if(args.length == 2 && args[0].equalsIgnoreCase("filter")) {
+		if(args.length == 2 && args[0].equalsIgnoreCase("filter"))
+		{
 			filter.put(player.getName(), args[1]);
 			player.sendMessage("Filtering signs based on '"+args[1]+"'");
 			return true;
-		} else if(args.length == 2) {
+		}
+		
+		else if(args.length == 2)
+		{
 			return false;
 		}
+
 		// the rest of the commands
-		if(args[0].equalsIgnoreCase("begin")) {
+		if(args[0].equalsIgnoreCase("begin"))
+		{
 			cache.put(player.getName(), new ArrayList<Location>());
 			player.sendMessage("Sign detection begun, punch the signs to add them to the list.");
 			return true;
-		} else if(args[0].equalsIgnoreCase("end")) {
-			if(cache.containsKey(player.getName())) {
+		}
+
+		else if(args[0].equalsIgnoreCase("end"))
+		{
+			if(cache.containsKey(player.getName()))
+			{
 				protections.clear(); // clear protections so things are recached
 				// now process adding to the thing and update all the heads, hurrah!
 				List<Location> blocks = this.cache.remove(player.getName());
@@ -111,10 +141,14 @@ public class HeadListener implements Listener, CommandExecutor {
 				player.sendMessage("Sign detection ended, updating signs...");
 				headFile.thread.updateHeads();
 				return true;
-			} else {
+			}
+			
+			else
+			{
 				return false;
 			}
 		}
+
 		return false;
 	}
 

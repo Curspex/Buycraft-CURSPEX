@@ -1,6 +1,6 @@
 name: Buycraft
 main: net.buycraft.Plugin
-version: 6.7.2
+version: 6.7.3
 authors: [Tebex_Limited, Omnivion]
 website: http://buycraft.net
 commands:

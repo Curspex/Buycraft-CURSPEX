@@ -14,105 +14,135 @@ import java.util.List;
 
 public class HeadFile {
 
-    // config values
-    public boolean enabled = false;
-    public boolean currency = false;
-    public int update = 5;
+	// config values
+	public boolean enabled = false;
+	public boolean currency = false;
+	public int update = 5;
 
-    Plugin plugin;
-    private YamlConfiguration config = null;
-    private File file = null;
+	Plugin plugin;
+	private YamlConfiguration config = null;
+	private File file = null;
 
-    private List<HeadSign> signs = new ArrayList<HeadSign>();
-    HeadThread thread = null;
-    HeadListener listener = null;
+	private List<HeadSign> signs = new ArrayList<HeadSign>();
+	HeadThread thread = null;
+	HeadListener listener = null;
 
-    public HeadFile(Plugin plugin) {
-        this.plugin = plugin;
-        this.file = new File(plugin.getDataFolder(), "heads.yml");
-        this.config = new YamlConfiguration();
+	public HeadFile(Plugin plugin)
+	{
+		this.plugin = plugin;
+		this.file = new File(plugin.getDataFolder(), "heads.yml");
+		this.config = new YamlConfiguration();
 
-        checkConfig();
-        registerEvents();
-        
-        try {
-            if(enabled) {
-                onEnable();
-                loadSigns();
-                
-                thread = new HeadThread(this);
-                
-                Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, thread, 20*60*update, 20*60*update);
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
-            ReportTask.setLastException(e);
-        }
-        
-        plugin.getCommand("buysign").setExecutor(listener);
-    }
+		checkConfig();
+		registerEvents();
 
-    private void registerEvents() {
-        listener = new HeadListener(this);
-        Bukkit.getPluginManager().registerEvents(listener, plugin);
-    }
+		try
+		{
+			if(enabled)
+			{
+				onEnable();
+				loadSigns();
 
-    private void checkConfig() {
-        Settings settings = plugin.getSettings();
-        enabled = settings.getString("headsEnabled").equals("true");
-        currency = settings.getString("headsCurrency").equals("true");
-        update = 30;
-    }
+				thread = new HeadThread(this);
 
-    private void onEnable() throws Exception {
-        if(file.getParentFile().exists()) {
-            file.getParentFile().mkdirs();
-        }
-        if(!file.exists()) {
-            file.createNewFile();
-        }
-        config = new YamlConfiguration();
-        config.load(file);
-    }
+				Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, thread, 20*60*update, 20*60*update);
+			}
+		}
 
-    public List<HeadSign> getSigns() {
-        return signs;
-    }
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			ReportTask.setLastException(e);
+		}
+		
+		plugin.getCommand("buysign").setExecutor(listener);
+	}
 
-    public void addSign(HeadSign h) {
-        List<String> signs = config.getStringList("signs");
-        if(signs == null) {
-            signs = new ArrayList<String>();
-        }
-        signs.add(h.serialize());
-        config.set("signs", signs);
-        try {
-            config.save(file);
-            // and cleanly load the signs again
-            loadSigns();
-        } catch(Exception e) {
-            e.printStackTrace();
-            ReportTask.setLastException(e);
-        }
-    }
+	private void registerEvents()
+	{
+		listener = new HeadListener(this);
+		Bukkit.getPluginManager().registerEvents(listener, plugin);
+	}
 
-    public void loadSigns() throws JSONException {
-        // clear current signs if not empty, so we can re-use this method safely
-        if(!this.signs.isEmpty()) {
-            this.signs.clear();
-        }
-        List<String> signs = config.getStringList("signs");
-        if(signs != null && signs.size() > 0) {
-            for(String sign : signs) {
-                // deserialize and add to the list
-                HeadSign h = HeadSign.deserialize(sign);
-                this.signs.add(h);
-            }
-        }
-    }
+	private void checkConfig()
+	{
+		Settings settings = plugin.getSettings();
+		enabled = settings.getString("headsEnabled").equals("true");
+		currency = settings.getString("headsCurrency").equals("true");
+		update = 30;
+	}
 
-    public HeadThread getHeadThread()
-    {
-        return thread;
-    }   
+	private void onEnable() throws Exception
+	{
+		if (file.getParentFile().exists())
+		{
+			file.getParentFile().mkdirs();
+		}
+
+		if (!file.exists())
+		{
+			file.createNewFile();
+		}
+
+		config = new YamlConfiguration();
+		config.load(file);
+	}
+
+	public List<HeadSign> getSigns()
+	{
+		return signs;
+	}
+
+	public void addSign(HeadSign h)
+	{
+		List<String> signs = config.getStringList("signs");
+
+		if(signs == null)
+		{
+			signs = new ArrayList<String>();
+		}
+
+		signs.add(h.serialize());
+		config.set("signs", signs);
+		try
+		{
+			config.save(file);
+			// and cleanly load the signs again
+			loadSigns();
+		}
+		
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			ReportTask.setLastException(e);
+		}
+	}
+
+	public void loadSigns() throws JSONException
+	{
+		// clear current signs if not empty, so we can re-use this method safely
+		if(!this.signs.isEmpty())
+		{
+			this.signs.clear();
+		}
+		
+		List<String> signs = config.getStringList("signs");
+		
+		if(signs != null && signs.size() > 0)
+		{
+			
+			for(String sign : signs)
+			{
+				// deserialize and add to the list
+				HeadSign h = HeadSign.deserialize(sign);
+				this.signs.add(h);
+			}
+			
+		}
+	}
+
+	public HeadThread getHeadThread()
+	{
+		return thread;
+	}   
 }

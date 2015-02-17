@@ -8,109 +8,146 @@ import java.util.Properties;
 import net.buycraft.tasks.ReportTask;
 
 public class Settings {
-    private final String LOCATION = "plugins/Buycraft/settings.conf";
-    private File file;
 
-    private HashMap<String, String> defaultProperties;
-    private Properties properties;
+	private final String LOCATION = "plugins/Buycraft/settings.conf";
+	private File file;
 
-    public Settings() {
-        this.file = new File(LOCATION);
+	private HashMap<String, String> defaultProperties;
+	private Properties properties;
 
-        this.defaultProperties = new HashMap<String, String>();
-        this.properties = new Properties();
+	public Settings()
+	{
+		this.file = new File(LOCATION);
 
-        load();
-        assignDefault();
-    }
+		this.defaultProperties = new HashMap<String, String>();
+		this.properties = new Properties();
 
-    private void load() {
-        try {
-            if (!file.exists()) {
-                file.createNewFile();
-            }
+		load();
+		assignDefault();
+	}
 
-            properties.load(new FileInputStream(LOCATION));
-        } catch (IOException e) {
-            e.printStackTrace();
-            ReportTask.setLastException(e);
-        }
-    }
+	private void load()
+	{
+		try
+		{
+			if (!file.exists())
+			{
+				file.createNewFile();
+			}
 
-    private void assignDefault() {
-        Boolean toSave = false;
+			properties.load(new FileInputStream(LOCATION));
+		}
 
-        defaultProperties.put("secret", "");
-        defaultProperties.put("commandChecker", "true");
-        defaultProperties.put("https", "false");
-        defaultProperties.put("disableBuyCommand", "false");
-        defaultProperties.put("useBuyGUI", "true");
-        defaultProperties.put("directPay", "false");
-        defaultProperties.put("buyCommand", "buy");
-        defaultProperties.put("headsEnabled", "false");
-        defaultProperties.put("headsCurrency", "true");
-        defaultProperties.put("buysignsRemoveFreePrice", "false");
-        defaultProperties.put("debug", "false");
-        defaultProperties.put("commandThrottleCount", "150");
-        defaultProperties.put("disable-secret-command", "false");
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			ReportTask.setLastException(e);
+		}
+	}
 
-        for (Entry<String, String> entry : defaultProperties.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
+	private void assignDefault()
+	{
+		Boolean toSave = false;
 
-            if (!properties.containsKey(key)) {
-                properties.setProperty(key, value);
+		defaultProperties.put("secret", "");
+		defaultProperties.put("commandChecker", "true");
+		defaultProperties.put("https", "false");
+		defaultProperties.put("disableBuyCommand", "false");
+		defaultProperties.put("useBuyGUI", "true");
+		defaultProperties.put("directPay", "false");
+		defaultProperties.put("buyCommand", "buy");
+		defaultProperties.put("headsEnabled", "false");
+		defaultProperties.put("headsCurrency", "true");
+		defaultProperties.put("buysignsRemoveFreePrice", "false");
+		defaultProperties.put("debug", "false");
+		defaultProperties.put("commandThrottleCount", "150");
+		defaultProperties.put("disable-secret-command", "false");
 
-                toSave = true;
-            }
-        }
+		for (Entry<String, String> entry : defaultProperties.entrySet())
+		{
+			String key = entry.getKey();
+			String value = entry.getValue();
 
-        if (toSave) {
-            saveSettings();
-        }
-    }
+			if (!properties.containsKey(key))
+			{
+				properties.setProperty(key, value);
 
-    private void saveSettings() {
-        try {
-            properties.store(new FileOutputStream(LOCATION), "Buycraft Plugin");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            ReportTask.setLastException(e);
-        } catch (IOException e) {
-            e.printStackTrace();
-            ReportTask.setLastException(e);
-        }
-    }
+				toSave = true;
+			}
+		}
 
-    public boolean getBoolean(String key) {
-        if (properties.containsKey(key)) {
-            return Boolean.valueOf(getString(key));
-        } else {
-            throw new RuntimeException("Settings key '" + key + "' not found in the settings.conf file.");
-        }
+		if (toSave)
+		{
+			saveSettings();
+		}
+	}
 
-    }
+	private void saveSettings()
+	{
+		try
+		{
+			properties.store(new FileOutputStream(LOCATION), "Buycraft Plugin");
+		}
 
-    public int getInt(String key) {
-        if (properties.containsKey(key)) {
-            return Integer.valueOf(getString(key));
-        } else {
-            throw new RuntimeException("Settings key '" + key + "' not found in the settings.conf file.");
-        }
+		catch (FileNotFoundException e)
+		{
+			e.printStackTrace();
+			ReportTask.setLastException(e);
+		}
 
-    }
-    
-    public String getString(String key) {
-        if (properties.containsKey(key)) {
-            return properties.getProperty(key);
-        } else {
-            throw new RuntimeException("Settings key '" + key + "' not found in the settings.conf file.");
-        }
-    }
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			ReportTask.setLastException(e);
+		}
+	}
 
-    public void setString(String key, String value) {
-        properties.setProperty(key, value);
+	public boolean getBoolean(String key)
+	{
+		if (properties.containsKey(key))
+		{
+			return Boolean.valueOf(getString(key));
+		}
 
-        saveSettings();
-    }
+		else
+		{
+			throw new RuntimeException("Settings key '" + key + "' not found in the settings.conf file.");
+		}
+
+	}
+
+	public int getInt(String key)
+	{
+		if (properties.containsKey(key))
+		{
+			return Integer.valueOf(getString(key));
+		}
+
+		else
+		{
+			throw new RuntimeException("Settings key '" + key + "' not found in the settings.conf file.");
+		}
+
+	}
+	
+	public String getString(String key)
+	{
+		if (properties.containsKey(key))
+		{
+			return properties.getProperty(key);
+		}
+		
+		else
+		{
+			throw new RuntimeException("Settings key '" + key + "' not found in the settings.conf file.");
+		}
+	}
+
+	public void setString(String key, String value)
+	{
+		properties.setProperty(key, value);
+
+		saveSettings();
+	}
+
 }

@@ -27,254 +27,305 @@ import org.bukkit.inventory.InventoryHolder;
 
 public class BuyInventoryUI extends AbstractBuyUI implements Listener, InventoryHolder {
 
-    private int expectedInventoryHolderId = 0;
-    private HashMap<String, Inventory> buyMenus;
-    private HashMap<String, String> menuKeys;
+	private int expectedInventoryHolderId = 0;
+	private HashMap<String, Inventory> buyMenus;
+	private HashMap<String, String> menuKeys;
 
-    private boolean useMainMenu = false;
+	private boolean useMainMenu = false;
 
-    public BuyInventoryUI() {
-        // Register the listener
-        Bukkit.getPluginManager().registerEvents(this, Plugin.getInstance());
-    }
+	public BuyInventoryUI() 
+	{
+		// Register the listener
+		Bukkit.getPluginManager().registerEvents(this, Plugin.getInstance());
+	}
 
-    /**
-     * Listens for inventory clicks which occur within BuyCraft inventories
-     */
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public synchronized void onInventoryClick(InventoryClickEvent event) {
-        Inventory inv = event.getInventory();
-        // Check if the player is in a Buycraft Inventory
-        if (inv.getType() != InventoryType.CHEST || !(inv.getHolder() instanceof BuyMenuInventoryHolder) || !(event.getWhoClicked() instanceof Player)) {
-            return;
-        }
+	/**
+	 * Listens for inventory clicks which occur within BuyCraft inventories
+	 */
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public synchronized void onInventoryClick(InventoryClickEvent event)
+	{
+		Inventory inv = event.getInventory();
+		// Check if the player is in a Buycraft Inventory
+		if (inv.getType() != InventoryType.CHEST || !(inv.getHolder() instanceof BuyMenuInventoryHolder) || !(event.getWhoClicked() instanceof Player))
+		{
+			return;
+		}
 
-        event.setCancelled(true);
+		event.setCancelled(true);
 
-        BuyMenuInventoryHolder holder = (BuyMenuInventoryHolder) inv.getHolder();
+		BuyMenuInventoryHolder holder = (BuyMenuInventoryHolder) inv.getHolder();
 
-        // Check that the inventory is valid
-        if (holder.id != expectedInventoryHolderId) {
-            while (!inv.getViewers().isEmpty()) {
-                inv.getViewers().get(0).closeInventory();
-            }
-            return;
-        }
+		// Check that the inventory is valid
+		if (holder.id != expectedInventoryHolderId)
+		{
+			while (!inv.getViewers().isEmpty())
+			{
+				inv.getViewers().get(0).closeInventory();
+			}
+			return;
+		}
 
-        String key = menuKeys.get(event.getInventory().getName());
+		String key = menuKeys.get(event.getInventory().getName());
 
-        // Check the player is clicking inside our inventory
-        if (event.getRawSlot() >= inv.getSize()) {
-            return;
-        }
+		// Check the player is clicking inside our inventory
+		if (event.getRawSlot() >= inv.getSize())
+		{
+			return;
+		}
 
-        // Find out what the player is doing
-        BuycraftInventoryType type = BuycraftInventoryType.getType(key);
-        key = type.stripType(key);
-        if (type == BuycraftInventoryType.MAIN_MENU) {
-            handleCategoryMenuClick(event, Integer.valueOf(key));
-        } else {
-            int currentCategoryId = -1;
-            int currentPage = 0;
+		// Find out what the player is doing
+		BuycraftInventoryType type = BuycraftInventoryType.getType(key);
+		key = type.stripType(key);
+		if (type == BuycraftInventoryType.MAIN_MENU)
+		{
+			handleCategoryMenuClick(event, Integer.valueOf(key));
+		}
+		
+		else
+		{
+			int currentCategoryId = -1;
+			int currentPage = 0;
 
-            int index = key.indexOf('-');
-            if (index == -1)
-                currentPage = Integer.valueOf(key);
-            else
-            {
-                currentCategoryId = Integer.valueOf(key.substring(0, index));
-                currentPage = Integer.valueOf(key.substring(index+1));
-            }
-            handleCategoryViewClick(event, currentCategoryId, currentPage);
-        }
-    }
+			int index = key.indexOf('-');
+			if (index == -1)
+				currentPage = Integer.valueOf(key);
+			else
+			{
+				currentCategoryId = Integer.valueOf(key.substring(0, index));
+				currentPage = Integer.valueOf(key.substring(index+1));
+			}
+			handleCategoryViewClick(event, currentCategoryId, currentPage);
+		}
+	}
 
-    private synchronized void handleCategoryMenuClick(InventoryClickEvent event, int currentPage) {
-        if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
-            return;
-        }
+	private synchronized void handleCategoryMenuClick(InventoryClickEvent event, int currentPage)
+	{
+		if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR)
+		{
+			return;
+		}
 
-        ItemType t = ItemType.checkType(event.getCurrentItem());
+		ItemType t = ItemType.checkType(event.getCurrentItem());
 
-        // Clicking in an invalid place
-        if (t == null) {
-            return;
-        }
+		// Clicking in an invalid place
+		if (t == null)
+		{
+			return;
+		}
 
-        if (t != ItemType.OTHER) {
-            currentPage += t == ItemType.NEXT ? 1 : -1;
-            showCategoryPage((Player) event.getWhoClicked(), currentPage);
-            return;
-        }
+		if (t != ItemType.OTHER)
+		{
+			currentPage += t == ItemType.NEXT ? 1 : -1;
+			showCategoryPage((Player) event.getWhoClicked(), currentPage);
+			return;
+		}
 
-        // Show category items
-        PackageCategory c = ItemParser.getCategory(event.getCurrentItem());
+		// Show category items
+		PackageCategory c = ItemParser.getCategory(event.getCurrentItem());
 
-        // Invalid category
-        if (c == null) {
-            Plugin.getInstance().getLogger().severe("Failed to find PackageCategory shown in inventory");
-            event.getInventory().setItem(event.getSlot(), null);
-            return;
-        }
-        
-        Player player = (Player) event.getWhoClicked();
-        player.playSound(player.getLocation(), Sound.CLICK, 0.5f, 1f);
-        
-        event.getWhoClicked().closeInventory();
-        showPage((Player) event.getWhoClicked(), c.getNiceId(), 1);
-    }
+		// Invalid category
+		if (c == null)
+		{
+			Plugin.getInstance().getLogger().severe("Failed to find PackageCategory shown in inventory");
+			event.getInventory().setItem(event.getSlot(), null);
+			return;
+		}
+		
+		Player player = (Player) event.getWhoClicked();
+		player.playSound(player.getLocation(), Sound.CLICK, 0.5f, 1f);
+		
+		event.getWhoClicked().closeInventory();
+		showPage((Player) event.getWhoClicked(), c.getNiceId(), 1);
+	}
 
-    private synchronized void handleCategoryViewClick(InventoryClickEvent event, int currentCategoryId, int currentPage) {
-        if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
-            return;
-        }
-        
-        Player player = (Player) event.getWhoClicked();
-        player.playSound(player.getLocation(), Sound.CLICK, 0.5f, 1f);
-        
-        ItemType t = ItemType.checkType(event.getCurrentItem());
+	private synchronized void handleCategoryViewClick(InventoryClickEvent event, int currentCategoryId, int currentPage)
+	{
 
-        // Clicking in an invalid place
-        if (t == null) {
-            return;
-        }
+		if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR)
+		{
+			return;
+		}
+		
+		Player player = (Player) event.getWhoClicked();
+		player.playSound(player.getLocation(), Sound.CLICK, 0.5f, 1f);
+		
+		ItemType t = ItemType.checkType(event.getCurrentItem());
 
-        if (t == ItemType.HOME) {
-            event.getWhoClicked().closeInventory();
-            showCategoryPage((Player) event.getWhoClicked(), 1);
-            return;
-        }
+		// Clicking in an invalid place
+		if (t == null)
+		{
+			return;
+		}
 
-        if (t != ItemType.OTHER) {
-            currentPage += t == ItemType.NEXT ? 1 : -1;
-            event.getWhoClicked().closeInventory();
-            showPage((Player) event.getWhoClicked(), currentCategoryId, currentPage);
-            return;
-        }
+		if (t == ItemType.HOME)
+		{
+			event.getWhoClicked().closeInventory();
+			showCategoryPage((Player) event.getWhoClicked(), 1);
+			return;
+		}
 
-        int orderId = ItemParser.getPackage(event.getCurrentItem());
+		if (t != ItemType.OTHER)
+		{
+			currentPage += t == ItemType.NEXT ? 1 : -1;
+			event.getWhoClicked().closeInventory();
+			showPage((Player) event.getWhoClicked(), currentCategoryId, currentPage);
+			return;
+		}
 
-        event.getWhoClicked().closeInventory();
-        if (!showPackage((Player) event.getWhoClicked(), orderId)) {
-            // Invalid package
-            event.getInventory().setItem(event.getSlot(), null);
-        }
-    }
+		int orderId = ItemParser.getPackage(event.getCurrentItem());
 
-    public synchronized void showCategoryPage(Player player, int pageNumber) {
-        if (!useMainMenu) {
-            showPage(player, 0, 1);
-            return;
-        }
+		event.getWhoClicked().closeInventory();
+		if (!showPackage((Player) event.getWhoClicked(), orderId))
+		{
+			// Invalid package
+			event.getInventory().setItem(event.getSlot(), null);
+		}
+	}
 
-        if (!checkReady(player)) {
-            return;
-        }
+	public synchronized void showCategoryPage(Player player, int pageNumber)
+	{
+		if (!useMainMenu)
+		{
+			showPage(player, 0, 1);
+			return;
+		}
 
-        String key = BuycraftInventoryType.MAIN_MENU.toString() + pageNumber;
-        Inventory inv = buyMenus.get(key);
+		if (!checkReady(player))
+		{
+			return;
+		}
 
-        if (inv == null) {
-            player.sendMessage(Chat.header());
-            player.sendMessage(Chat.seperator());
-            player.sendMessage(Chat.seperator() + Plugin.getInstance().getLanguage().getString("pageNotFound"));
-            player.sendMessage(Chat.seperator());
-            player.sendMessage(Chat.footer());
-        } else {
-            player.openInventory(inv);
-        }
-    }
+		String key = BuycraftInventoryType.MAIN_MENU.toString() + pageNumber;
+		Inventory inv = buyMenus.get(key);
 
-    public synchronized void showPage(Player player, int categoryId, int pageNumber) {
-        if (!checkReady(player)) {
-            return;
-        }
+		if (inv == null)
+		{
+			player.sendMessage(Chat.header());
+			player.sendMessage(Chat.seperator());
+			player.sendMessage(Chat.seperator() + Plugin.getInstance().getLanguage().getString("pageNotFound"));
+			player.sendMessage(Chat.seperator());
+			player.sendMessage(Chat.footer());
+		}
 
-        if (pageNumber == 0) {
-            if (useMainMenu) {
-                showCategoryPage(player, 1);
-                return;
-            }
-            pageNumber = 1;
-        }
+		else
+		{
+			player.openInventory(inv);
+		}
+	}
 
-        String key = BuycraftInventoryType.CATEGORY_MENU.toString() + categoryId + "-" + pageNumber;
-        Inventory inv = buyMenus.get(key);
+	public synchronized void showPage(Player player, int categoryId, int pageNumber)
+	{
+		if (!checkReady(player))
+		{
+			return;
+		}
 
-        if (inv == null) {
-            player.sendMessage(Chat.header());
-            player.sendMessage(Chat.seperator());
-            player.sendMessage(Chat.seperator() + Plugin.getInstance().getLanguage().getString("pageNotFound"));
-            player.sendMessage(Chat.seperator());
-            player.sendMessage(Chat.footer());
-        } else {
-            player.openInventory(inv);
-        }
-    }
+		if (pageNumber == 0)
+		{
+			if (useMainMenu)
+			{
+				showCategoryPage(player, 1);
+				return;
+			}
+			pageNumber = 1;
+		}
 
-    public synchronized void packagesReset() {
-        HashMap<String, Inventory> newBuyMenus = new HashMap<String, Inventory>();
+		String key = BuycraftInventoryType.CATEGORY_MENU.toString() + categoryId + "-" + pageNumber;
+		Inventory inv = buyMenus.get(key);
 
-        List<PackageCategory> categories = Plugin.getInstance().getPackageManager().getCategories();
-        boolean useMainMenu = false;
-        BuyMenuInventoryHolder invHolder = new BuyMenuInventoryHolder(++expectedInventoryHolderId);
+		if (inv == null)
+		{
+			player.sendMessage(Chat.header());
+			player.sendMessage(Chat.seperator());
+			player.sendMessage(Chat.seperator() + Plugin.getInstance().getLanguage().getString("pageNotFound"));
+			player.sendMessage(Chat.seperator());
+			player.sendMessage(Chat.footer());
+		}
+		
+		else
+		{
+			player.openInventory(inv);
+		}
+	}
 
-        if (categories.size() > 1) {
-            useMainMenu = true;
-            BuycraftInventoryCreator.createMainMenu(invHolder, newBuyMenus, categories);
-        }
+	public synchronized void packagesReset()
+	{
+		HashMap<String, Inventory> newBuyMenus = new HashMap<String, Inventory>();
 
-        for (PackageCategory c : categories) {
-            BuycraftInventoryCreator.createPackagePages(invHolder, newBuyMenus, c, useMainMenu);
-        }
+		List<PackageCategory> categories = Plugin.getInstance().getPackageManager().getCategories();
+		boolean useMainMenu = false;
+		BuyMenuInventoryHolder invHolder = new BuyMenuInventoryHolder(++expectedInventoryHolderId);
 
-        HashMap<String, String> newMenuKeys = new HashMap<String, String>(newBuyMenus.size());
+		if (categories.size() > 1)
+		{
+			useMainMenu = true;
+			BuycraftInventoryCreator.createMainMenu(invHolder, newBuyMenus, categories);
+		}
 
-        for (Entry<String, Inventory> e : newBuyMenus.entrySet()) {
-            newMenuKeys.put(e.getValue().getName(), e.getKey());
-        }
+		for (PackageCategory c : categories)
+		{
+			BuycraftInventoryCreator.createPackagePages(invHolder, newBuyMenus, c, useMainMenu);
+		}
 
-        this.useMainMenu = useMainMenu;
-        this.menuKeys = newMenuKeys;
-        this.buyMenus = newBuyMenus;
-    }
+		HashMap<String, String> newMenuKeys = new HashMap<String, String>(newBuyMenus.size());
 
-    public synchronized void pluginReloaded() {
-        if (buyMenus != null) {
-            for (Inventory inv : buyMenus.values()) {
-                while (!inv.getViewers().isEmpty()) {
-                    inv.getViewers().get(0).closeInventory();
-                }
-            }
-        }
-    }
+		for (Entry<String, Inventory> e : newBuyMenus.entrySet())
+		{
+			newMenuKeys.put(e.getValue().getName(), e.getKey());
+		}
 
-    public synchronized boolean checkReady(Player player) {
-        if (buyMenus == null) {
-            player.sendMessage(Chat.header());
-            player.sendMessage(Chat.seperator());
-            player.sendMessage(Chat.seperator() + ChatColor.RED + Plugin.getInstance().getLanguage().getString("inventoryMenuNotReady"));
-            player.sendMessage(Chat.seperator());
-            player.sendMessage(Chat.footer());
-            return false;
-        }
-        return true;
-    }
+		this.useMainMenu = useMainMenu;
+		this.menuKeys = newMenuKeys;
+		this.buyMenus = newBuyMenus;
+	}
 
-    public Inventory getInventory() {
-        throw new UnsupportedOperationException("BuyInventoryUI does not support this method call");
-    }
+	public synchronized void pluginReloaded()
+	{
+		if (buyMenus != null)
+		{
+			for (Inventory inv : buyMenus.values())
+			{
+				while (!inv.getViewers().isEmpty())
+				{
+					inv.getViewers().get(0).closeInventory();
+				}
+			}
+		}
+	}
 
-    private class BuyMenuInventoryHolder implements InventoryHolder {
-        public final int id;
+	public synchronized boolean checkReady(Player player)
+	{
+		if (buyMenus == null)
+		{
+			player.sendMessage(Chat.header());
+			player.sendMessage(Chat.seperator());
+			player.sendMessage(Chat.seperator() + ChatColor.RED + Plugin.getInstance().getLanguage().getString("inventoryMenuNotReady"));
+			player.sendMessage(Chat.seperator());
+			player.sendMessage(Chat.footer());
+			return false;
+		}
+		return true;
+	}
 
-        BuyMenuInventoryHolder(int id) {
-            this.id = id;
-        }
+	public Inventory getInventory()
+	{
+		throw new UnsupportedOperationException("BuyInventoryUI does not support this method call");
+	}
 
-        public Inventory getInventory() {
-            return null;
-        }
-    }
+	private class BuyMenuInventoryHolder implements InventoryHolder
+	{
+		public final int id;
+
+		BuyMenuInventoryHolder(int id)
+		{
+			this.id = id;
+		}
+
+		public Inventory getInventory()
+		{
+			return null;
+		}
+	}
 
 }
