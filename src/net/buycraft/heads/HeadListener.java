@@ -12,9 +12,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.*;
@@ -122,50 +119,80 @@ public class HeadListener implements Listener, CommandExecutor {
 	}
 
 	@EventHandler
-	public void onPlayerInteract(PlayerInteractEvent event) {
-		if(!headFile.enabled) return;
+	public void onPlayerInteract(PlayerInteractEvent event)
+	{
+		if (!headFile.enabled) return;
+
 		// filter out non-clicked block events
-		if(event.getAction().equals(Action.LEFT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.PHYSICAL)) {
+		switch (event.getAction())
+		{
+			case PHYSICAL:
+			case LEFT_CLICK_AIR:
+			case RIGHT_CLICK_AIR:
+				return;
+
+			default:
+				break;
+		}
+
+		if (!(event.getClickedBlock().getState() instanceof Sign))
+		{
 			return;
 		}
-		if(!(event.getClickedBlock().getState() instanceof Sign)) {
-			return;
-		}
-		if(event.getPlayer().hasPermission("buycraft.admin") || event.getPlayer().hasPermission("buycraft.signs")) {
-			if(this.cache.containsKey(event.getPlayer().getName())) {
+
+		if (event.getPlayer().isOp())
+		{
+
+			if (this.cache.containsKey(event.getPlayer().getName()))
+			{
+
 				// cancel event
 				event.setCancelled(true);
+
 				// that way they can't break the block
 				List<Location> locations = cache.get(event.getPlayer().getName());
 				Location l = event.getClickedBlock().getLocation();
 				boolean add = true;
-				// locations.contains(l);
-				for(Location loc : locations) {
-					if(loc.getWorld().getName().equals(l.getWorld().getName()) &&
+
+				for (Location loc : locations)
+				{
+					if (loc.getWorld().getName().equals(l.getWorld().getName()) &&
 							loc.getBlockX() == l.getBlockX() &&
 							loc.getBlockY() == l.getBlockY() &&
-							loc.getBlockZ() == l.getBlockZ()) {
+							loc.getBlockZ() == l.getBlockZ())
+					{
 						add = false;
 					}
 				}
-				if(add) {
+
+				if (add)
+				{
 					locations.add(l);
 					event.getPlayer().sendMessage("Sign added to list!");
-				} else {
+				}
+
+				else
+				{
 					event.getPlayer().sendMessage("Sign already in the list!");
 				}
+
 			}
-		} else if(isProtected(event.getClickedBlock())) {
+		}
+		
+		/*else if(isProtected(event.getClickedBlock()))
+		{
 			event.setCancelled(true);
 			event.getPlayer().sendMessage(ChatColor.RED+"That block is protected!");
-		}
+		}*/
 	}
 
 	/*@EventHandler
-	public void onBlockPlace(BlockPlaceEvent event) {
+	public void onBlockPlace(BlockPlaceEvent event)
+	{
 		if(!headFile.enabled) return;
 		
-		if(event.getPlayer().hasPermission("buycraft.admin") || event.getPlayer().hasPermission("buycraft.signs")) {
+		if(event.getPlayer().hasPermission("buycraft.admin") || event.getPlayer().hasPermission("buycraft.signs"))
+		{
 			// do nothing
 		}
 		
