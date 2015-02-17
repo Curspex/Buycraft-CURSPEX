@@ -56,7 +56,13 @@ public class CommandExecuteTask extends ApiTask {
             username = Bukkit.getServer().getOfflinePlayer(username).getName();
             command = REPLACE_NAME.matcher(command).replaceAll(username);
 
-            if (command.startsWith("{mcmyadmin}")) {
+            PackageCommand pkgCmd = new PackageCommand(commandId, username, command, delay, requiredInventorySlots);
+            if (!Plugin.getInstance().getCommandDeleteTask().queuedForDeletion(commandId) && !commandQueue.contains(pkgCmd))
+            {
+                commandQueue.add(pkgCmd);
+            }
+            
+            /*if (command.startsWith("{mcmyadmin}")) {
                 Plugin.getInstance().getLogger().info("Executing command '" + command + "' on behalf of user '" + username + "'.");
                 String newCommand = command.replace("{mcmyadmin}", "");                
                 Logger.getLogger("McMyAdmin").info("Buycraft tried command: " + newCommand);
@@ -65,7 +71,7 @@ public class CommandExecuteTask extends ApiTask {
                 if (!Plugin.getInstance().getCommandDeleteTask().queuedForDeletion(commandId) && !commandQueue.contains(pkgCmd)) {
                     commandQueue.add(pkgCmd);
                 }
-            }
+            }*/
         } catch (Exception e) {
             e.printStackTrace();
         }
