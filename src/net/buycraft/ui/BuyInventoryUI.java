@@ -20,8 +20,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.Event.Result;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
@@ -57,8 +57,11 @@ public class BuyInventoryUI extends AbstractBuyUI implements Listener, Inventory
 			return;
 		}
 
+		event.setResult(Result.DENY);
 		event.setCancelled(true);
 		event.getCurrentItem().setAmount(0);
+		if (event.getCursor() != null)
+			event.getCursor().setAmount(0);
 		((Player) event.getWhoClicked()).updateInventory();
 
 		BuyMenuInventoryHolder holder = (BuyMenuInventoryHolder) inv.getHolder();
