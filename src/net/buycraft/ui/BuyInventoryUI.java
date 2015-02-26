@@ -53,6 +53,8 @@ public class BuyInventoryUI extends AbstractBuyUI implements Listener, Inventory
 		}
 
 		event.setCancelled(true);
+		event.getCurrentItem().setAmount(0);
+		((Player) event.getWhoClicked()).updateInventory();
 
 		BuyMenuInventoryHolder holder = (BuyMenuInventoryHolder) inv.getHolder();
 
