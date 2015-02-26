@@ -54,10 +54,8 @@ public class VisitLinkTask extends ApiTask {
 						player.sendMessage(new String[] {Chat.header(), Chat.seperator(),
 								Chat.seperator() + ChatColor.GREEN + getLanguage().getString("pleaseVisit") + ":",
 								Chat.seperator(), Chat.seperator() + jsonResponse.getString("url"),
-								Chat.seperator(), Chat.seperator() + ChatColor.RED + getLanguage().getString("turnChatBackOn"), Chat.seperator(), Chat.footer()});
+								Chat.seperator(), Chat.footer()});
 					}
-
-					disableChat(playerName);
 
 					getLogger().info("Generated short URL " + jsonResponse.getString("url") + ".");
 

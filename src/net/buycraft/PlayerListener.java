@@ -3,21 +3,17 @@ package net.buycraft;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
-import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerListener implements Listener {
 	
-	private Plugin plugin;
-
 	public PlayerListener()
 	{
-		this.plugin = Plugin.getInstance();
+		Plugin.getInstance();
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	/*@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerQuit(PlayerQuitEvent event)
 	{
 		plugin.getChatManager().enableChat(event.getPlayer());
@@ -35,7 +31,7 @@ public class PlayerListener implements Listener {
 		{
 			plugin.getChatManager().clearPlayerSet(event.getRecipients());
 		}
-	}
+	}*/
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerLogin(PlayerLoginEvent event)

@@ -47,7 +47,6 @@ public class BuyChatUI extends AbstractBuyUI {
 
 			if (packagesToDisplay.size() > 0)
 			{
-				Plugin.getInstance().getChatManager().disableChat((Player) player);
 
 				player.sendMessage(Chat.header());
 				player.sendMessage(Chat.seperator());
@@ -68,7 +67,7 @@ public class BuyChatUI extends AbstractBuyUI {
 					player.sendMessage(Chat.seperator());
 				}
 
-				player.sendMessage(Chat.seperator() + ChatColor.RED + Plugin.getInstance().getLanguage().getString("turnChatBackOn"));
+				//player.sendMessage(Chat.seperator() + ChatColor.RED + Plugin.getInstance().getLanguage().getString("turnChatBackOn"));
 				player.sendMessage(Chat.seperator());
 				player.sendMessage(Chat.footer());
 			}

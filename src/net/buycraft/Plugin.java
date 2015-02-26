@@ -4,7 +4,6 @@ import net.buycraft.api.Api;
 import net.buycraft.api.ApiTask;
 import net.buycraft.commands.BuyCommand;
 import net.buycraft.commands.BuycraftCommand;
-import net.buycraft.commands.EnableChatCommand;
 import net.buycraft.heads.HeadFile;
 import net.buycraft.packages.PackageManager;
 import net.buycraft.tasks.AuthenticateTask;
@@ -50,7 +49,6 @@ public class Plugin extends JavaPlugin implements Listener {
 	private String serverStore = "";
 
 	private PackageManager packageManager;
-	private ChatManager chatManager;
 	private CommandExecuteTask commandExecutor;
 	private CommandDeleteTask commandDeleteTask;
 	private PendingPlayerCheckerTask pendingPlayerCheckerTask;
@@ -96,7 +94,6 @@ public class Plugin extends JavaPlugin implements Listener {
 		api = new Api();
 
 		packageManager = new PackageManager();
-		chatManager = new ChatManager();
 		commandExecutor = new CommandExecuteTask();
 		commandDeleteTask = new CommandDeleteTask();
 		pendingPlayerCheckerTask = new PendingPlayerCheckerTask();
@@ -131,12 +128,8 @@ public class Plugin extends JavaPlugin implements Listener {
 
 	public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args)
 	{
-		if (label.equalsIgnoreCase("ec"))
-		{
-			return EnableChatCommand.process(commandSender, args);
-		}
 
-		else if (label.equalsIgnoreCase("buycraft"))
+		if (label.equalsIgnoreCase("buycraft"))
 		{
 			return BuycraftCommand.process(commandSender, args);
 		}
@@ -375,11 +368,6 @@ public class Plugin extends JavaPlugin implements Listener {
 	public File getJarFile()
 	{
 		return getFile();
-	}
-
-	public ChatManager getChatManager()
-	{
-		return chatManager;
 	}
 
 	public String getFolderPath()

@@ -47,7 +47,12 @@ public class BuyInventoryUI extends AbstractBuyUI implements Listener, Inventory
 	{
 		Inventory inv = event.getInventory();
 		// Check if the player is in a Buycraft Inventory
-		if (inv.getType() != InventoryType.CHEST || !(inv.getHolder() instanceof BuyMenuInventoryHolder) || !(event.getWhoClicked() instanceof Player))
+		/*if (inv.getType() != InventoryType.CHEST || !(inv.getHolder() instanceof BuyMenuInventoryHolder) || !(event.getWhoClicked() instanceof Player))
+		{
+			return;
+		}*/
+
+		if (!inv.getName().contains("Buycraft"))
 		{
 			return;
 		}

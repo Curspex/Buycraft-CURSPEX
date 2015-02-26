@@ -4,7 +4,6 @@ import net.buycraft.Plugin;
 import net.buycraft.util.Language;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.logging.Logger;
@@ -52,26 +51,6 @@ public abstract class ApiTask implements Runnable {
 	public Logger getLogger()
 	{
 		return Plugin.getInstance().getLogger();
-	}
-
-	public void disableChat(final String name)
-	{
-		final Player player = Bukkit.getPlayerExact(name);
-		if (player != null)
-		{
-
-			Bukkit.getScheduler().scheduleSyncDelayedTask(Plugin.getInstance(), new Runnable()
-			{
-
-				public void run()
-				{
-					Plugin.getInstance().getChatManager().disableChat(player);
-				}
-
-			}, 1);
-
-		}
-
 	}
 
 }
