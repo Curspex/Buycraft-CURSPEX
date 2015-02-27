@@ -8,7 +8,7 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 
 public class PlayerListener implements Listener {
-	
+
 	public PlayerListener()
 	{
 		Plugin.getInstance();
@@ -22,4 +22,5 @@ public class PlayerListener implements Listener {
 			event.disallow(Result.KICK_OTHER, ChatColor.RED + "This user has been disabled due to security reasons.");
 		}
 	}
+
 }
