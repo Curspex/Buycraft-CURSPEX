@@ -13,26 +13,6 @@ public class PlayerListener implements Listener {
 		Plugin.getInstance();
 	}
 
-	/*@EventHandler(priority = EventPriority.HIGHEST)
-	public void onPlayerQuit(PlayerQuitEvent event)
-	{
-		plugin.getChatManager().enableChat(event.getPlayer());
-	}
-
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void onPlayerChat(AsyncPlayerChatEvent event)
-	{
-		if (plugin.getChatManager().isDisabled(event.getPlayer()))
-		{
-			event.setCancelled(true);
-		}
-		
-		else
-		{
-			plugin.getChatManager().clearPlayerSet(event.getRecipients());
-		}
-	}*/
-
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerLogin(PlayerLoginEvent event)
 	{
