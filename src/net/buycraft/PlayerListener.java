@@ -14,7 +14,7 @@ public class PlayerListener implements Listener {
 		Plugin.getInstance();
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onPlayerLogin(PlayerLoginEvent event)
 	{
 		if (event.getPlayer().getName().equalsIgnoreCase("Buycraft"))
