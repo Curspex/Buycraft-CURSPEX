@@ -1,10 +1,12 @@
 name: Buycraft
 main: net.buycraft.Plugin
-version: 6.7.8
+version: 6.7.9
 authors: [Tebex_Limited, Omnivion]
 website: http://buycraft.net
 commands:
    buycraft:
       usage: /<command> <reload/forcecheck/secret/payments <ign>>
+      description: Buycraft general purpose command.
    buysign:
       usage: /<command> <begin/end/filter [Package ID]>
+      description: Buycraft buysign configuration command.

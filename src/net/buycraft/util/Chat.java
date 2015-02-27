@@ -4,11 +4,9 @@ import org.bukkit.ChatColor;
 
 public class Chat {
 
-	private static final String header = ChatColor.WHITE + "|----------------------" + ChatColor.LIGHT_PURPLE + " BUYCRAFT " + ChatColor.WHITE + "---------------------",
+	private static final String header = ChatColor.WHITE + "|---------------------<" + ChatColor.LIGHT_PURPLE + " BUYCRAFT " + ChatColor.WHITE + ">--------------------",
 								footer = ChatColor.WHITE + "|----------------------------------------------------",
 								seperator = ChatColor.WHITE + "| ";
-
-	private Chat() {}
 
 	public static String header()
 	{
