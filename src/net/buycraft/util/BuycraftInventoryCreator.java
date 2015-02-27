@@ -32,7 +32,7 @@ public class BuycraftInventoryCreator {
 			int size = getSize(itemsToBeMade + (globalMade?0:1));
 
 			// Create the inventory
-			Inventory inv = createInventory(holder, size, pageId > 1 ? invTitle + " " + pageId : invTitle);
+			Inventory inv = createInventory(holder, 9, pageId > 1 ? invTitle + " " + pageId : invTitle);
 
 			// If we are adding any other buttons we need a free line of slots
 			if (itemsToBeMade + (globalMade?0:1) > size)
@@ -48,7 +48,7 @@ public class BuycraftInventoryCreator {
 			// Fill empty slots of the inventory
 			for (; categoryI < categories.size(); ++categoryI)
 			{
-				// When this returns a un-empty map the current view is full
+				// When this returns a non-empty map the current view is full
 				if (!inv.addItem(ItemParser.getCategoryItem(categories.get(categoryI))).isEmpty())
 					break;
 			}
