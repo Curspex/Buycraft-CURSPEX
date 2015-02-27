@@ -1,5 +1,6 @@
 package net.buycraft;
 
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -18,7 +19,7 @@ public class PlayerListener implements Listener {
 	{
 		if (event.getPlayer().getName().equalsIgnoreCase("Buycraft"))
 		{
-			event.disallow(Result.KICK_OTHER, "This user has been disabled due to security reasons.");
+			event.disallow(Result.KICK_OTHER, ChatColor.RED + "This user has been disabled due to security reasons.");
 		}
 	}
 }
