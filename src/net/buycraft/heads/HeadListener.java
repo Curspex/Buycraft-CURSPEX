@@ -80,7 +80,7 @@ public class HeadListener implements Listener, CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
 	{
 		// do nothing where nothing happens
-		if(!(sender.hasPermission("buycraft.admin") || sender.hasPermission("buycraft.signs")))
+		if(!sender.hasPermission("buycraft.admin"))
 		{
 			sender.sendMessage(ChatColor.RED + "You don't have permission to do that.");
 			return true;
@@ -98,6 +98,7 @@ public class HeadListener implements Listener, CommandExecutor {
 			
 			return true;
 		}
+
 		Player player = (Player) sender;
 
 		if(args.length < 1 || args.length > 2)
@@ -119,7 +120,7 @@ public class HeadListener implements Listener, CommandExecutor {
 		}
 
 		// the rest of the commands
-		if(args[0].equalsIgnoreCase("begin"))
+		if(args[0].equalsIgnoreCase("start"))
 		{
 			cache.put(player.getName(), new ArrayList<Location>());
 			player.sendMessage("Sign detection begun, punch the signs to add them to the list.");

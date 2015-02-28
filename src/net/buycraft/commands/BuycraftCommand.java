@@ -19,7 +19,7 @@ public class BuycraftCommand {
 		Plugin plugin = Plugin.getInstance();
 		if (args.length > 0)
 		{
-			if (commandSender instanceof Player == false || commandSender.hasPermission("buycraft.admin") || commandSender.isOp())
+			if (commandSender instanceof Player == false || commandSender.hasPermission("buycraft.admin"))
 			{
 
 				if(args[0].equalsIgnoreCase("payments"))
@@ -188,7 +188,7 @@ public class BuycraftCommand {
 				if (commandSender instanceof Player == false || commandSender.hasPermission("buycraft.admin") || commandSender.hasPermission("buycraft.signs") || commandSender.isOp())
 				{
 					commandSender.sendMessage(Chat.seperator());
-					commandSender.sendMessage(Chat.seperator() + ChatColor.LIGHT_PURPLE + "/buysign begin/filter <Package>:" + ChatColor.GREEN + " Set payment signs");
+					commandSender.sendMessage(Chat.seperator() + ChatColor.LIGHT_PURPLE + "/buysign start/filter <Package>:" + ChatColor.GREEN + " Set payment signs");
 					commandSender.sendMessage(Chat.seperator() + ChatColor.LIGHT_PURPLE + "/buysign end:" + ChatColor.GREEN + " End payment signs");
 				}
 
