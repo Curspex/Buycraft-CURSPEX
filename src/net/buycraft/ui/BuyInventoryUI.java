@@ -59,7 +59,8 @@ public class BuyInventoryUI extends AbstractBuyUI implements Listener, Inventory
 
 		event.setResult(Result.DENY);
 		event.setCancelled(true);
-		event.getCurrentItem().setAmount(0);
+		if (event.getCurrentItem() != null)
+			event.getCurrentItem().setAmount(0);
 		if (event.getCursor() != null)
 			event.getCursor().setAmount(0);
 		((Player) event.getWhoClicked()).updateInventory();
