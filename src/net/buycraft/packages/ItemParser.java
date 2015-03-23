@@ -1,5 +1,6 @@
 package net.buycraft.packages;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import net.buycraft.Plugin;
@@ -14,6 +15,7 @@ public class ItemParser {
 	private static final ItemStack nextPage;
 	private static final ItemStack previousPage;
 	private static final ItemStack homePage;
+	private static final DecimalFormat priceForm = new DecimalFormat("###.###");
 
 	static
 	{
@@ -61,10 +63,11 @@ public class ItemParser {
 		ItemStack item = new ItemStack(p.getMaterial() != null ? p.getMaterial() : Material.PAPER);
 
 		setDisplayName(item, ChatColor.LIGHT_PURPLE + p.getName());
+		String priceValue = String.valueOf(priceForm.format(Double.parseDouble(p.getPrice()) * 0.6));
 		setLore(item, p.getDescription(), new String[]
 		{
 			ChatColor.YELLOW + Plugin.getInstance().getLanguage().getString("packageId") + ": " + ChatColor.LIGHT_PURPLE + p.getOrder(),
-			ChatColor.YELLOW + Plugin.getInstance().getLanguage().getString("packagePrice") + ": " + ChatColor.LIGHT_PURPLE + p.getPrice() + " " + Plugin.getInstance().getServerCurrency(),
+			ChatColor.YELLOW + Plugin.getInstance().getLanguage().getString("packagePrice") + ": " + ChatColor.RED + "" + ChatColor.STRIKETHROUGH + p.getPrice() + ChatColor.GREEN + " " + priceValue.substring(0, priceValue.length() - 1) + " " + Plugin.getInstance().getServerCurrency(),
 			null, null
 		});
 
