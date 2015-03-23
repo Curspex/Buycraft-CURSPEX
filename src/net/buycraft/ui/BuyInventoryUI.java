@@ -112,7 +112,7 @@ public class BuyInventoryUI extends AbstractBuyUI implements Listener, Inventory
 
 	private synchronized void handleCategoryMenuClick(InventoryClickEvent event, int currentPage)
 	{
-		if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR)
+		if (event.getCurrentItem() == null || event.getCurrentItem().getType().equals(Material.AIR))
 		{
 			return;
 		}

@@ -53,7 +53,7 @@ public class VisitLinkTask extends ApiTask {
 					{
 						player.sendMessage(new String[] {Chat.header(), Chat.seperator(),
 								Chat.seperator() + ChatColor.GREEN + getLanguage().getString("pleaseVisit") + ":",
-								Chat.seperator(), Chat.seperator() + jsonResponse.getString("url"),
+								Chat.seperator(), Chat.seperator() + ChatColor.UNDERLINE + jsonResponse.getString("url"),
 								Chat.seperator(), Chat.footer()});
 					}
 
