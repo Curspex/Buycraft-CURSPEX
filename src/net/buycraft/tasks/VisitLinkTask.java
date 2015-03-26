@@ -62,7 +62,7 @@ public class VisitLinkTask extends ApiTask {
 					return;
 				}
 
-				else 
+				else
 				{
 					getLogger().severe(jsonResponse.getString("errormessage"));
 				}
