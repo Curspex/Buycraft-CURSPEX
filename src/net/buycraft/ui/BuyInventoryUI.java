@@ -52,7 +52,7 @@ public class BuyInventoryUI extends AbstractBuyUI implements Listener, Inventory
 			return;
 		}*/
 
-		if (!inv.getName().contains("Buycraft"))
+		if (!inv.getName().toUpperCase().contains("BUYCRAFT"))
 		{
 			return;
 		}
