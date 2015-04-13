@@ -1,6 +1,5 @@
 package net.buycraft.packages;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import net.buycraft.Plugin;
@@ -15,7 +14,7 @@ public class ItemParser {
 	private static final ItemStack nextPage;
 	private static final ItemStack previousPage;
 	private static final ItemStack homePage;
-	private static final DecimalFormat priceForm = new DecimalFormat("#.##");
+	//private static final DecimalFormat priceForm = new DecimalFormat("#.##");
 
 	static
 	{
@@ -68,7 +67,8 @@ public class ItemParser {
 		setLore(item, p.getDescription(), new String[]
 		{
 			ChatColor.YELLOW + Plugin.getInstance().getLanguage().getString("packageId") + ": " + ChatColor.LIGHT_PURPLE + p.getOrder(),
-			ChatColor.YELLOW + Plugin.getInstance().getLanguage().getString("packagePrice") + ": " + ChatColor.RED + "" + ChatColor.STRIKETHROUGH + p.getPrice() + ChatColor.GREEN + " " + priceForm.format(Double.parseDouble(p.getPrice()) * 0.6) + " " + Plugin.getInstance().getServerCurrency(),
+			ChatColor.YELLOW + Plugin.getInstance().getLanguage().getString("packagePrice") + ": " + ChatColor.GREEN + " " + p.getPrice() + " " + Plugin.getInstance().getServerCurrency(),
+			//ChatColor.YELLOW + Plugin.getInstance().getLanguage().getString("packagePrice") + ": " + ChatColor.RED + "" + ChatColor.STRIKETHROUGH + p.getPrice() + ChatColor.GREEN + " " + priceForm.format(Double.parseDouble(p.getPrice()) * 0.6) + " " + Plugin.getInstance().getServerCurrency(),
 		});
 
 	   return item;
